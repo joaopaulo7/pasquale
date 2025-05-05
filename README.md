@@ -24,9 +24,9 @@ https://github.com/user-attachments/assets/0dd077c0-dae1-434c-910e-a4f4b0e4490a
   
 * **Brainy Pants AI Inside!** 🧠 This isn't your grandma's spell checker (though we love you, Grandma!). We're talking about a real, honest-to-goodness AI that can catch those tricky spelling ghosts and grammar ghouls.
   
-* **Doesn't Hog All the ~pastels~ pies!** 🥧 We're aiming for this to be a **lean**, **mean**, grammar-checking machine that works well with tiny LLMs and that won't gobble up all your computer's resources.
+* **Doesn't Hog All The ~Pastels~ Pies!** 🥧 We're aiming for this to be a **lean**, **mean**, grammar-checking machine that works well with tiny LLMs and that won't gobble up all your computer's resources.
   
-* **Multiple languages?** 🌎 Totally possible!!... Is it viable? Depends on the LLM used . ~Desculpa, professor!~ 😓
+* **Multiple Languages?** 🌎 Totally possible!!... Is it viable? Depends on the LLM used... ~Desculpa, professor!~ 😓
 
 &nbsp;
 
