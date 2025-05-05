@@ -1,0 +1,6 @@
+Answer the following question. Give your response as a single line inside triple quotes(""").
+
+Explain, in one succinct and direct sentence, why would replacing **'{removed}'** with **'{added}'** improve the text?
+**context:**
+before:...{context1}...
+after:...{context2}...

@@ -50,7 +50,7 @@ class Pasquale:
             if result[i][0] == ' ' or i == len(result)-1:
                 if start_i != -1:
                     aux_dic = {}
-                    aux_dic['added']    = " ".join(added_s)
+                    aux_dic['added']    = " ".join(added_s) if len(added_s) > 0 else " "
                     aux_dic['removed']  = " ".join(removed_s)
                     aux_dic['start']    = start_i
                     aux_dic['char_start'] = char_start
@@ -59,10 +59,25 @@ class Pasquale:
                     aux_dic['context2'] = " ".join(text1[max(0, start_i-2):start_i]+
                                             added_s+text1[text1_i:min(text1_i+2, len(text1))])
                     
-                    # if just adds, add to the spacebar before
+                    # if just adds, remove its closests neighbor
                     if aux_dic['len'] == 0:
-                        aux_dic['char_start'] += -1
-                        aux_dic['len'] = 1
+                        if text1_i < len(text1):
+                            aux_dic['added']    = aux_dic['added'] + " "+ text1[text1_i]
+                            aux_dic['removed']  = text1[text1_i]
+                            aux_dic['len']      = len(text1[text1_i])
+                        else:
+                            aux_dic['added']       = text1[text1_i-1] + " "
+                            aux_dic['removed']     = text1[text1_i-1]
+                            aux_dic['char_start'] -= len(text1[text1_i-1])
+                            aux_dic['len']         = len(text1[text1_i-1])
+                    
+                    # if just removes, expand bar
+                    if aux_dic['added'] == " ":
+                        if text1_i != len(text1):
+                            aux_dic['len'] += 1
+                        if text1_i != 0:
+                            aux_dic['char_start'] -= 1
+                        
                     corrections.append(aux_dic)
                     start_i = -1
                     added_s.clear()
@@ -80,9 +95,9 @@ class Pasquale:
     
         
     
-    def ask_llm_check(self, text, language, genres, model, temperature=0.0, max_tokens=8000, persistent=True):
-        system_prompt = self.prompts[language]['system']+"\n\ngenres: "+genres
-        text = self.prompts[language]['text']+text
+    def ask_llm_check(self, text, language, genres, model, extra_prompt="", temperature=0.0, max_tokens=8000, thinking=False, persistent=True):
+        system_prompt = self.prompts[language]['system'].format(genres=genres)
+        text = self.prompts[language]['text'] + text +"\n"+ extra_prompt
         
         self.messages=[
             {"role": "system", "content": system_prompt},
@@ -99,15 +114,18 @@ class Pasquale:
         if persistent:
             self.messages.append(completion.choices[0].message)
         
-        return completion.choices[0].message.content.strip("\n")
+        if thinking:
+            return completion.choices[0].message.content.split("</think>\n\n")[1].split('"""')[1]
+        else:
+            return completion.choices[0].message.content.split('"""')[1]
     
     
-    def ask_llm_reason(self, correction, language, model, temperature=0.0, max_tokens=8000, persistent=False):
+    def ask_llm_reason(self, correction, language, model, extra_prompt="", temperature=0.0, max_tokens=8000, thinking=False, persistent=False):
         text  = self.prompts[language]['reason'].format(
                     removed  = correction['removed'],
                     added    = correction['added'],
                     context1 = correction['context1'],
-                    context2 = correction['context2'])
+                    context2 = correction['context2']) +"\n"+  extra_prompt
         
         completion = self.client.chat.completions.create(
             model = model,
@@ -116,19 +134,24 @@ class Pasquale:
             temperature = temperature,
         )
         
+        
         if persistent:
             self.messages.append({"role": "user", "content": text})
             self.messages.append(completion.choices[0].message)
         
-        return completion.choices[0].message.content
+        if thinking:
+            return completion.choices[0].message.content.split("</think>\n\n")[1].split('"""')[1]
+        else:
+            return completion.choices[0].message.content.split('"""')[1]
     
     
-    def check(self, text, language, genres, model="gemma3:4b-it-qat", temperature=0.0, max_tokens=7200):
-        cor_text = self.ask_llm_check(text, language, genres, model, temperature, max_tokens)
+    def check(self, text, language, genres, model="gemma3:4b-it-qat", **kwargs):
+        cor_text = self.ask_llm_check(text, language, genres, model, **kwargs)
         corrections = Pasquale.get_corrections(text.split(" "), cor_text.split(" "))
         
         for correction in corrections:
-            correction['reason'] = self.ask_llm_reason(correction, language, model, temperature, max_tokens)
+            correction['reason'] = self.ask_llm_reason(correction, language, model, **kwargs)
         
         return corrections
+
 
