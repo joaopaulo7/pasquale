@@ -4,7 +4,7 @@ Tired of typos sneaking into your brilliant prose? Fear not! This repository hol
 
 &nbsp;
 
-**Using Pasquale in [TexStudio](https://github.com/texstudio-org/texstudio):**
+**Using Pasquale with [TexStudio](https://github.com/texstudio-org/texstudio):**
 
 
 https://github.com/user-attachments/assets/0dd077c0-dae1-434c-910e-a4f4b0e4490a
