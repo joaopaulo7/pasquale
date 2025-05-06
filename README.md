@@ -84,7 +84,7 @@ Pasquale is still in development, so the only way to run it is directly via the 
    
 &nbsp;
 
-### 🙋‍♀️ Asking for Pasquale's help (starting the server) 🙋‍♀️
+### 🙋‍♀️ Asking for Pasquale's help (starting and using the server) 🙋‍♀️
 
 1. **Adjust configurations (optional)**
    
