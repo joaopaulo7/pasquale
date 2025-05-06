@@ -25,6 +25,8 @@ https://github.com/user-attachments/assets/0dd077c0-dae1-434c-910e-a4f4b0e4490a
 * **Keeps Your Secrets Secret!** 🤫 All the grammar wizardry happens right on your computer. Your words are yours and yours alone!
   
 * **Brainy Pants AI Inside!** 🧠 This isn't your grandma's spell checker (though we love you, Grandma!). We're talking about real, honest-to-goodness AIs that can catch those spelling ghosts and grammar ghouls.
+
+* **Not Only *How*, But Also *Why*** 👨‍🏫 Pasquale is designed to be your teacher, not your dictator! It will provide a reason for every change it proposes. It's up to you to accept or reject.
   
 * **Doesn't Hog All The ~Pastels~ Pies!** 🥧 The goal is for Pasquale to be a **mean** but *lean* grammar-checking machine that works well with tiny LLMs and won't gobble up all your resources.
   
