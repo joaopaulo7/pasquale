@@ -99,7 +99,7 @@ def check():
                 return last_resp
         
         last_text = text
-        corrections = p.check(text, language, "formal, academic", "gemma3:1b-it-qat")
+        corrections = p.check(text, language, "formal, acadêmico", "gemma3:1b-it-qat")
         last_resp = {
             "software": {
                 "name": "pasquale",

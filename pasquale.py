@@ -97,7 +97,7 @@ class Pasquale:
     
     def ask_llm_check(self, text, language, genres, model, extra_prompt="", temperature=0.0, max_tokens=8000, thinking=False, persistent=True):
         system_prompt = self.prompts[language]['system'].format(genres=genres)
-        text = self.prompts[language]['text'] + text +"\n"+ extra_prompt
+        text = self.prompts[language]['text'].format(text=text) +"\n"+ extra_prompt
         
         self.messages=[
             {"role": "system", "content": system_prompt},
@@ -113,12 +113,12 @@ class Pasquale:
         
         if persistent:
             self.messages.append(completion.choices[0].message)
-            
+        
         
         if thinking:
-            return completion.choices[0].message.content.split("</think>\n\n")[1].split('"""')[1]
+            return completion.choices[0].message.content.split("</think>\n\n")[1].strip("\n")
         else:
-            return completion.choices[0].message.content.split('"""')[1]
+            return completion.choices[0].message.content.strip("\n")
     
     
     def ask_llm_reason(self, correction, language, model, extra_prompt="", temperature=0.0, max_tokens=8000, thinking=False, persistent=False):
@@ -135,15 +135,14 @@ class Pasquale:
             temperature = temperature,
         )
         
-        
         if persistent:
             self.messages.append({"role": "user", "content": text})
             self.messages.append(completion.choices[0].message)
         
         if thinking:
-            return completion.choices[0].message.content.split("</think>\n\n")[1].split('"""')[1]
+            return completion.choices[0].message.content.split("</think>\n\n")[1].strip("\n")
         else:
-            return completion.choices[0].message.content.split('"""')[1]
+            return completion.choices[0].message.content.strip("\n")
     
     
     def check(self, text, language, genres, model="gemma3:4b-it-qat", **kwargs):
