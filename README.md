@@ -139,9 +139,9 @@ Pasquale is currently still in development, so the only way to run it is directl
 4.  **Client-side setup:**
 
     As a *server*, Pasquale is designed to *serve* a client, usually a local text editor, so we need to tell these apps where to get grammar suggestions from.
-    **\*By sheer dumb luck coincidence\***, Pasquale is compatible with clients using the very popular LanguageTool API, so, for most clients, setting it up is as easy as swapping a url.
-
-    So, the process is quite simple: just find the LanguageTool API url in your text editor configurations and swap the original domain to the one the server is running on.
+    
+    **By sheer dumb luck coincidence**, Pasquale is compatible with the format of the very popular LanguageTool API.
+    So, for most clients, setting it up is as easy as swapping a url,  just find the LanguageTool API url in your text editor's configurations and swap the original domain to the one the server is running on.
 
     For example, for using it with:
     - **TeXstudio:** go to *>Options>Configure TeXstudio>Language Checking*, then, find and change the server URL field to `http://localhost:5000/`:
@@ -154,7 +154,7 @@ Pasquale is currently still in development, so the only way to run it is directl
 
 ## 🏗️ Work in Progress 🏗️
 
-Pasquale is a one-man operation, still a work in progress and very preliminary, so expect heavy changes.
+Pasquale is a one-man operation, still a work in progress and very preliminary, so expect large and frequent changes.
 
 Currently, the main improvements for the future are:
 - Consolidate the compatibility with text editors even further;
