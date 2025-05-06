@@ -1,7 +1,9 @@
-Answer the following question. Give your response as a single line inside triple quotes(""").
+Responda à seguinte pergunta. Dê sua resposta em uma única linha dentro de aspas triplas (""").
 
-Explain, in one succinct and direct sentence, why would replacing **'{removed}'** with **'{added}'** improve the text?
+Explique, de forma sucinta e direta, por que substituir **'{removed}'** por **'{added}'** melhoraria o texto?
 
-**context:**
-before:...{context1}...
-after:...{context2}...
+
+**contexto:**
+
+antes:...{context1}...
+depois:...{context2}...

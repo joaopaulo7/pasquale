@@ -113,6 +113,7 @@ class Pasquale:
         
         if persistent:
             self.messages.append(completion.choices[0].message)
+            
         
         if thinking:
             return completion.choices[0].message.content.split("</think>\n\n")[1].split('"""')[1]
