@@ -1,6 +1,8 @@
 # 🤖 Pasquale, Your Very Own Local Grammar Teacher ✨
 
-Tired of typos sneaking into your brilliant prose? Fear not! This repository holds the secret to running your **very own**, **locally hosted**, **AI-powered** grammar, style and spelling professor! No more sending your precious words off into the internet ether – keep them safe and sound on your own digital turf! 🏡
+Tired of typos sneaking into your brilliant prose? Fear not! This repository holds the secret to running your **very own**, **locally hosted**, **AI-powered** grammar, style and spelling professor!
+
+No more sending your precious words off into the internet ether – keep them safe and sound on your own digital turf! 🏡
 
 &nbsp;
 
@@ -10,7 +12,7 @@ Tired of typos sneaking into your brilliant prose? Fear not! This repository hol
 https://github.com/user-attachments/assets/0dd077c0-dae1-434c-910e-a4f4b0e4490a
 
 
-**Less than 2GB of VRAM usage, running with gemma3-1B-it-qat.** 🙀🙀
+**Obs: This example was produced using less than 1.5GB of VRAM.** 🙀🙀
 
 ---
 
@@ -20,11 +22,11 @@ https://github.com/user-attachments/assets/0dd077c0-dae1-434c-910e-a4f4b0e4490a
 
 ## ✨ What Are Pasquale's Awesome Features? ✨
 
-* **Keeps Your Secrets Secret!** 🤫 All the grammar wizardry happens right here on your computer. Your words are yours and yours alone!
+* **Keeps Your Secrets Secret!** 🤫 All the grammar wizardry happens right on your computer. Your words are yours and yours alone!
   
-* **Brainy Pants AI Inside!** 🧠 This isn't your grandma's spell checker (though we love you, Grandma!). We're talking about a real, honest-to-goodness AI that can catch those tricky spelling ghosts and grammar ghouls.
+* **Brainy Pants AI Inside!** 🧠 This isn't your grandma's spell checker (though we love you, Grandma!). We're talking about a real, honest-to-goodness AI that can catch those spelling ghosts and grammar ghouls.
   
-* **Doesn't Hog All The ~Pastels~ Pies!** 🥧 We're aiming for this to be a **lean**, **mean**, grammar-checking machine that works well with tiny LLMs and that won't gobble up all your computer's resources.
+* **Doesn't Hog All The ~Pastels~ Pies!** 🥧 The goal is for Pasquale to be a **mean** but *lean* grammar-checking machine that works well with tiny LLMs and won't gobble up all your resources.
   
 * **Multiple Languages?** 🌎 Totally possible!!... Is it viable? Depends on the LLM used... ~Desculpa, professor!~ 😓
 
