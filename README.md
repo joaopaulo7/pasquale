@@ -46,7 +46,7 @@ https://github.com/user-attachments/assets/0dd077c0-dae1-434c-910e-a4f4b0e4490a
   
 ## 🛠️ How to run? 🛠️
 
-Pasquale is still in development, so only way to run is directly via the python command.
+Pasquale is still in development, so only way to run is directly via the sorce code.
 
 1.  **Install LLM server**
 
