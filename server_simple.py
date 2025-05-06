@@ -14,7 +14,6 @@ s = SequenceMatcher()
 p = pasquale.Pasquale()
 
 cv = Condition()
-queued = 0
 
 current_text = ""
 last_text = ""
@@ -60,28 +59,21 @@ def generate_matches(corrections):
 
 @app.route("/")
 def main():
-    global counter
-    with cv:
-        print("IN\n")
-        counter += 1
-        cv.notify()
-        cv.wait()
-        print(counter)
     return "hey, I'm working here!"
 
 
 @app.route("/v2/check", methods=['POST'])
 def check():        
-    if request.content_type == 'text/json' or request.content_type == 'application/x-www-form-urlencoded':
+    if request.content_type == "text/json" or request.content_type == "application/x-www-form-urlencoded":
         query = parse_qs(urlparse("dummy.com?"+request.get_data().decode('utf-8')).query)
         language = " ".join(query['language'])
         text = " ".join(query['text'])
-    elif request.content_type == 'application/json':
+    elif request.content_type == "application/json":
         in_json = request.get_json()
         language = in_json['language']
         text     = in_json['text']
     else:
-        raise TypeError("expected 'text/json', 'application/x-www-form-urlencoded' or 'application/json' type, but got '"+request.content_type+"'")
+        raise TypeError("expected 'text/json', 'application/x-www-form-urlencoded' or 'application/json' type, but got '"+request.content_type+"' instead")
     
     global last_text
     global current_text
@@ -99,7 +91,7 @@ def check():
                 return last_resp
         
         last_text = text
-        corrections = p.check(text, language, "formal, acadêmico", "gemma3:1b-it-qat")
+        corrections = p.check(text, language)
         last_resp = {
             "software": {
                 "name": "pasquale",

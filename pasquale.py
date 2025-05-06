@@ -4,10 +4,11 @@ from difflib import Differ
 from pprint import pprint
 
 class Pasquale:
-    def __init__(self, prompts_file="prompts/base_prompts.json"):
-        with open("creds.json") as in_file:
-            cred = json.load(in_file)
-        self.client = OpenAI(**cred)
+    def __init__(self, prompts_file="prompts/base_prompts.json", config_file="config.json"):
+        with open(config_file) as in_file:
+            config_json = json.load(in_file)
+        self.config = config_json['config']
+        self.client = OpenAI(**config_json['creds'])
         
         with open(prompts_file) as in_file:
             self.prompts = json.load(in_file)
@@ -20,25 +21,24 @@ class Pasquale:
         result = list(d.compare(text1, text2))
         corrections = []
 
-        text1_i = 0
-        text2_i = 0
-
         added_s = []
         removed_s = []
-
+        
         i = 0
         start_i = -1
+        text1_i = 0
+        text2_i = 0
         char_start = 0
         char_i = 0
         while i < len(result):
-            if result[i][0] == '+':
+            if result[i][0] == "+":
                 if start_i == -1:
                     start_i = text1_i
                     char_start = char_i
                 added_s.append(text2[text2_i])
                 text2_i += 1
             
-            elif result[i][0] == '-':
+            elif result[i][0] == "-":
                 if start_i == -1:
                     start_i = text1_i
                     char_start = char_i
@@ -47,22 +47,22 @@ class Pasquale:
                 char_i += len(text1[text1_i])+1
                 text1_i += 1
                 
-            if result[i][0] == ' ' or i == len(result)-1:
+            if result[i][0] == " " or i == len(result)-1:
                 if start_i != -1:
                     aux_dic = {}
-                    aux_dic['added']    = " ".join(added_s) if len(added_s) > 0 else " "
-                    aux_dic['removed']  = " ".join(removed_s)
-                    aux_dic['start']    = start_i
+                    aux_dic['added']      = " ".join(added_s) if len(added_s) > 0 else " "
+                    aux_dic['removed']    = " ".join(removed_s)
+                    aux_dic['start']      = start_i
                     aux_dic['char_start'] = char_start
-                    aux_dic['len'] = len(" ".join(removed_s))
-                    aux_dic['context1'] = " ".join(text1[max(0, start_i-2):min(text1_i+2, len(text1))])
-                    aux_dic['context2'] = " ".join(text1[max(0, start_i-2):start_i]+
-                                            added_s+text1[text1_i:min(text1_i+2, len(text1))])
+                    aux_dic['len']        = len(" ".join(removed_s))
+                    aux_dic['context1']   = " ".join(text1[max(0, start_i-2) : min(text1_i+2, len(text1))])
+                    aux_dic['context2']   = " ".join(text1[max(0, start_i-2) : start_i]
+                                                + added_s+text1[text1_i : min(text1_i+2, len(text1))])
                     
                     # if just adds, remove its closests neighbor
                     if aux_dic['len'] == 0:
                         if text1_i < len(text1):
-                            aux_dic['added']    = aux_dic['added'] + " "+ text1[text1_i]
+                            aux_dic['added']    = aux_dic['added'] + " " + text1[text1_i]
                             aux_dic['removed']  = text1[text1_i]
                             aux_dic['len']      = len(text1[text1_i])
                         else:
@@ -71,7 +71,7 @@ class Pasquale:
                             aux_dic['char_start'] -= len(text1[text1_i-1])
                             aux_dic['len']         = len(text1[text1_i-1])
                     
-                    # if just removes, expand bar
+                    # if just removes, expand bar to include the neighboring spaces
                     if aux_dic['added'] == " ":
                         if text1_i != len(text1):
                             aux_dic['len'] += 1
@@ -85,7 +85,7 @@ class Pasquale:
                 
                 
                 if i != len(result)-1:
-                    char_i += len(text1[text1_i])+1
+                    char_i  += len(text1[text1_i])+1
                     text1_i += 1
                     text2_i += 1
                 
@@ -95,9 +95,23 @@ class Pasquale:
     
         
     
-    def ask_llm_check(self, text, language, genres, model, extra_prompt="", temperature=0.0, max_tokens=8000, thinking=False, persistent=True):
-        system_prompt = self.prompts[language]['system'].format(genres=genres)
-        text = self.prompts[language]['text'].format(text=text) +"\n"+ extra_prompt
+    def ask_llm_check(
+            self,
+            text,
+            language, 
+            model, 
+            genres="", 
+            extra_prompt="", 
+            temperature=0.0, 
+            max_tokens=8000, 
+            thinking=False, 
+            persistent=True):
+                          
+        system_prompt = self.prompts[language]['system'].format(
+            genres=genres)
+                            
+        text = self.prompts[language]['text'].format(
+            text=text) + "\n" + extra_prompt
         
         self.messages=[
             {"role": "system", "content": system_prompt},
@@ -108,8 +122,7 @@ class Pasquale:
             model = model,
             messages = self.messages,
             max_completion_tokens = max_tokens,
-            temperature = temperature,
-        )
+            temperature = temperature)
         
         if persistent:
             self.messages.append(completion.choices[0].message)
@@ -121,19 +134,29 @@ class Pasquale:
             return completion.choices[0].message.content.strip("\n")
     
     
-    def ask_llm_reason(self, correction, language, model, extra_prompt="", temperature=0.0, max_tokens=8000, thinking=False, persistent=False):
-        text  = self.prompts[language]['reason'].format(
-                    removed  = correction['removed'],
-                    added    = correction['added'],
-                    context1 = correction['context1'],
-                    context2 = correction['context2']) +"\n"+  extra_prompt
+    def ask_llm_reason(
+            self, 
+            correction,
+            language, 
+            model,  
+            genres="", 
+            extra_prompt="", 
+            temperature=0.0, 
+            max_tokens=8000, 
+            thinking=False, 
+            persistent=False):
+                    
+        text = self.prompts[language]['reason'].format(
+            removed  = correction['removed'],
+            added    = correction['added'],
+            context1 = correction['context1'],
+            context2 = correction['context2']) + "\n" + extra_prompt
         
         completion = self.client.chat.completions.create(
             model = model,
-            messages = self.messages+[{"role": "user", "content": text}],
+            messages = self.messages + [{"role": "user", "content": text}],
             max_completion_tokens = max_tokens,
-            temperature = temperature,
-        )
+            temperature = temperature)
         
         if persistent:
             self.messages.append({"role": "user", "content": text})
@@ -145,12 +168,16 @@ class Pasquale:
             return completion.choices[0].message.content.strip("\n")
     
     
-    def check(self, text, language, genres, model="gemma3:4b-it-qat", **kwargs):
-        cor_text = self.ask_llm_check(text, language, genres, model, **kwargs)
+    def check(
+              self,
+              text,
+              language):
+        
+        cor_text = self.ask_llm_check(text, language, **self.config)
         corrections = Pasquale.get_corrections(text.split(" "), cor_text.split(" "))
         
         for correction in corrections:
-            correction['reason'] = self.ask_llm_reason(correction, language, model, **kwargs)
+            correction['reason'] = self.ask_llm_reason(correction, language, **self.config)
         
         return corrections
 

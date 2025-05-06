@@ -1,0 +1,14 @@
+{
+    "creds": {
+        "base_url": "http://localhost:11434/v1/",
+        "api_key": "ollama"
+    },
+    "config": {
+        "genres": "formal, academic, research paper",
+        "model": "gemma3:1b-it-qat",
+        "extra_prompt": "",
+        "temperature": 0.0,
+        "max_tokens": 8000,
+        "thinking": false
+    }
+}
