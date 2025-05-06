@@ -6,7 +6,7 @@ No more sending your precious words off into the internet ether – keep them sa
 
 &nbsp;
 
-**Using Pasquale with [TexStudio](https://github.com/texstudio-org/texstudio):**
+**Using Pasquale with [TeXstudio](https://github.com/texstudio-org/texstudio):**
 
 
 https://github.com/user-attachments/assets/0dd077c0-dae1-434c-910e-a4f4b0e4490a
@@ -28,7 +28,7 @@ https://github.com/user-attachments/assets/0dd077c0-dae1-434c-910e-a4f4b0e4490a
   
 * **Doesn't Hog All The ~Pastels~ Pies!** 🥧 The goal is for Pasquale to be a **mean** but *lean* grammar-checking machine that works well with tiny LLMs and won't gobble up all your resources.
   
-* **Multiple Languages?** 🌎 Totally possible!!... Is it viable? Depends on the LLM used... ~Desculpa, professor!~ 😓
+* **Multiple Languages?** 🌎 Working on it!! Our goal is to find the best prompts for each language, so that even the smallest LLMs become great teachers.
 
 &nbsp;
 
@@ -44,79 +44,129 @@ https://github.com/user-attachments/assets/0dd077c0-dae1-434c-910e-a4f4b0e4490a
 
 &nbsp;
   
-## 🛠️ How to run? 🛠️
+## 📝 How to run? 📝
 
-Pasquale is still in development, so only way to run is directly via the sorce code.
+Pasquale is still in development, so the only way to run it is directly via the source code.
 
-1.  **Install LLM server**
+### 🛠️ Setup (Linux) 🛠️
 
-    You should have a way to run the LLMs locally to get the best of Pasquale.
-    You can download any of most the famous LLM servers, like [ollama](https://www.ollama.com/) or [llamaccp](https://github.com/ggml-org/llama.cpp).
+1.  **Install LLM server and download model**
+
+    You should have a way to run the AI core locally to get the most of Pasquale.
+    For that can install any of the most famous LLM servers, like [ollama](https://www.ollama.com/) or [llamaccp](https://github.com/ggml-org/llama.cpp).
+    Then, you should choose and download at least one LLM model to run Pasquale's core. The process to do so depends on the server you are using.
+
+
+    For running gemma3-1B with ollama, which we recommend the most for weaker machines, you'd do something like this:
+    ```bash
+    # download ollama
+    curl -fsSL https://ollama.com/install.sh | sh
+
+    # download gemma3-1B
+    ollama pull gemma3:1b-it-qat
+    ```
+
     
+2.  **Install Prerequisites**
     
-3.  **Install Prerequisites**
+    The python prerequisites are pretty simple:
     ```bash
     pip install openai flask
-    cd [your-repository-name]
     ```
 
-4.  **Clone Repository:**
+3.  **Clone Repository:**
+
     ```bash
-    git clone [https://github.com/](https://github.com/)[your-username]/[your-repository-name].git
-    cd [your-repository-name]
+    git clone https://github.com/joaopaulo7/pasquale.git
+    cd pasquale
     ```
 
-    
-&nbsp;
+   
 &nbsp;
 
+### 🙋‍♀️ Asking for Pasquale's help (starting the server) 🙋‍♀️
+
+1. **Adjust configurations (optional)**
+   
+   If you are using the recommended LLM server and model, you're mostly good to go, but it might still be interesting to tweak some settings.
+   
+   To do that, you can edit the `config.json` file directly, which should look something like this:
+   ```json
+   {
+       "creds": {
+           "base_url": "http://localhost:11434/v1/",
+           "api_key": "ollama" 
+       },
+       "config": {
+           "model": "gemma3:1b-it-qat",
+           "genres": "formal; academic",
+           "extra_prompt": "",
+           "thinking": false,
+           "temperature": 0.0,
+           "max_tokens": 8000
+      }
+   }
+   ```
+   Most of the options are self-explanatory, but here are their descriptions anyway:
+   - **base_url and api_key:** These are your credentials to access the LLM server. **Important: choose the server's openAI-compatible url; otherwise it won't work.**
+     
+   - **model:** The model you want to use. Make sure you have it set up in the server.
+     
+   - **genres:** The literary genres of the texts. These are fed to the AI directly, serving as a guide on what to look out for.
+     You can make them whatever you want, **BUT** widely known genres work best. They are separeted with either commas or semicolon.
+   
+   - **extra_prompt:** An extra prompt to be given to the AI core with every query. One clear use for this is adding a "/no_think" option to disable thinking in hybrid models.
+     
+   - **thinking:** Indicates the model is a thinking model and `<think></think>` tags should be excluded from the output.
+     
+   - **temperature:** The amount of ~randomness~ creativity in the AI's suggestions. 0.0 is deterministic, best for consistent results; higher values are more random, best if you want more creative suggestions.
+  
+   - **max_tokens:** Maximum amount of tokens in a response. May be useful if the AI core starts hallucinating.
+
+
+2.  **Run server script:**
+
+    Pretty straightforward. Just run `server_simple.py`:
+    ```bash
+    python3 server_simple.py
+    ```
+
+    After running the script, you should be given the port in which the server is running, something like `Running on http://127.0.0.1:5000`. This is the url you'll be using to access the API.
+    
+
+4.  **Client-side setup:**
+
+    As a *server*, Pasquale is designed to *serve* a client, usually a local text editor, so we need to tell the apps where to get grammar suggestions from.
+    **\*By sheer dumb luck coincidence\***, Pasquale is compatible with clients using the very popular LanguageTool API, so, for most clients, setting up is as easy as swapping a url.
+
+    So, the process is simple: find the LanguageTool API url in your text editor configurations and swap the original domain to the one the server is running in.
+
+    For example, for:
+    - **TeXstudio:** just go to *>Options>Configure TeXstudio>Language Checking* and find and change the server URL field to `http://localhost:5000/`:
+
+      ![Screenshot from 2025-05-06 13-50-57](https://github.com/user-attachments/assets/7abcc957-fe75-4238-8b85-a4404313fa8b)
+     
+     Pronto! You should be getting hits in the server as soon as you start typing.
+
+&nbsp;
+
+## 🏗️ Work in Progress 🏗️
+
+Pasquale is a one-man operation and still a work in progress and very preliminary, so expect heavy changes.
+
+Currently the main goals are:
+- Explore compatibility of text editors further;
+- Explore compatibility of different LLMs;
+- Develop an easier way to set up and configure the server;
+- Expand and solidify the language catalog; ~Desculpa, professor!~ 😓
+- Create model-specific prompts;
+
+&nbsp;
+
+
+---
+
+&nbsp;
+&nbsp;
 
 God, I hope there aren't any typos in this readme.
-
-
-## WORK IN PROGRESS
-
-Oops. I ran out of time!
-
-I'll finish later.
-
-xoxo,
-
-Jão
-
-<!---
-### 🧙‍♂️ Summoning the Server (Running the Server) 🧙‍♀️
-
-1.  **Unleash the AI Brain (Download the Model - If Needed):**
-    * *(Heads up! If the AI's brain is already chilling in the repository, you can skip this step! 🎉)*
-    * Depending on the specific AI we're using, you might need to go on a mini treasure hunt to download its brain files. Fear not! A special `MODEL_SETUP.md` scroll or some instructions within the code will guide your quest. Place the brain in its designated chamber (maybe a folder called `models/`).
-
-2.  **Chant the Startup Spell:**
-    ```bash
-    python main.py
-    ```
-    *(If your main server file has a different name, use that instead of `main.py`!)*
-
-3.  **Behold! The Server Awakens!** ✨
-    Your terminal should now be glowing with signs that the server has sprung to life and is listening for your commands (usually at `http://localhost:5000`).
-
-## 💬 Talking to Your Grammar Buddy (Using the API) 🗣️
-
-Once the server is up and grooving, you can send it messages to check your text! Think of it like sending a note to your super-smart friend.
-
-### 📬 The Secret Address (Endpoint) 📬
-
-`/check`
-
-### ✉️ How to Send the Message (HTTP Method) ✉️
-
-`POST` (Like sending a letter!)
-
-### 📜 What to Write in Your Message (Request Body - JSON) 📜
-
-```json
-{
-  "text": "Eye wnt too chek gramar."
-}
-
---->
