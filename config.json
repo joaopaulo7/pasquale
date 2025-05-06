@@ -4,11 +4,11 @@
         "api_key": "ollama"
     },
     "config": {
-        "genres": "formal, academic, research paper",
         "model": "gemma3:1b-it-qat",
+        "genres": "formal; academic",
         "extra_prompt": "",
+        "thinking": false,
         "temperature": 0.0,
-        "max_tokens": 8000,
-        "thinking": false
-    }
+        "max_tokens": 8000
+   }
 }
