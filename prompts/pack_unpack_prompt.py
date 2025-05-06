@@ -20,4 +20,5 @@ def pack(lang):
     with open("base_prompts.json", "w") as f:
         json.dump(old_json, f)
     
-pack("en-US")
+unpack("en-US")
+pack("pt-BR")
