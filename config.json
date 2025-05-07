@@ -4,8 +4,9 @@
         "api_key": "ollama"
     },
     "config": {
+    	"model_family": "gemma3",
         "model": "gemma3:1b-it-qat",
-        "genres": "formal; academic",
+        "genres": "formal; scientific.",
         "extra_prompt": "",
         "thinking": false,
         "temperature": 0.0,
