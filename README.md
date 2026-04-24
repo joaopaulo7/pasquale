@@ -12,7 +12,7 @@ No more sending your precious words off into the internet ether – keep them sa
 https://github.com/user-attachments/assets/0dd077c0-dae1-434c-910e-a4f4b0e4490a
 
 
-**Ps. this example required less than 1.5GB of VRAM to run.** 🙀🙀
+**Ps. this example required less than 1.5GB of VRAM to run.**
 
 ---
 
