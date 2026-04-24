@@ -1,4 +1,4 @@
-# 🤖 Pasquale, Your Very Own Local Grammar Teacher ✨
+# 🤖 Pasquale, Your Very Own Local Grammar Checking Bot ✨
 
 Tired of typos sneaking into your brilliant prose? Fear not! This repository holds the secret to running your **very own**, **locally hosted**, **AI-powered** grammar, style and spelling professor!
 
