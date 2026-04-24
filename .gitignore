@@ -172,3 +172,11 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# venv
+grammar_venv
+grammar_venv/*
+
+# other
+start_server.sh
+
