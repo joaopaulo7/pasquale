@@ -1,13 +1,14 @@
-Explique, de forma sucinta e direta, por que substituir **'{removed}'** por **'{added}'** melhoraria o texto?
+Explique, em uma única frase clara e concisa, por que substituir **'{removed}'** por **'{added}'** melhora o texto.
 
 
-**contexto:**
+**Contexto**
 
-antes:...{context1}...
-depois:...{context2}...
+before: ...{context1}...
+after: ...{context2}...
 
 
 **Restrições**
 
-* Toda sua resposta deve em texto simples.
-* Seja direto em sua resposta, sem nenhuma informação extra.
+- Responda com exatamente uma frase.
+- Use apenas texto simples (sem markdown, sem formatação extra).
+- Forneça apenas a explicação, sem comentários adicionais.

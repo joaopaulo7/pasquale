@@ -1,13 +1,14 @@
-Explain, in one succinct and direct sentence, why would replacing **'{removed}'** with **'{added}'** improve the text?
+Explain, in one clear and concise sentence, why replacing **'{removed}'** with **'{added}'** improves the text.
 
 
-**context:**
+**Context**
 
-before:...{context1}...
-after:...{context2}...
+before: ...{context1}...
+after: ...{context2}...
 
 
 **Constraints**
 
-- Your entire response should be in plain text. 
-- Do what you are asked directly, without any extra output.
+- Respond with exactly one sentence.
+- Use plain text only (no markdown, no extra formatting).
+- Provide only the explanation, with no additional commentary.

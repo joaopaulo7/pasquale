@@ -1,0 +1,9 @@
+creds:
+    base_url: http://llamacpp:8082/v1
+    api_key: "llamacpp"
+config:
+    model_family: base
+    model: NVIDIA-Nemotron-3-Nano-4B-GGUF
+    genres: formal; scientific.
+    thinking: false
+    temperature: 0.2
