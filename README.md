@@ -69,21 +69,19 @@ Pasquale is currently still in development, so the only way to run it is directl
     ollama pull gemma3:1b-it-qat
     ```
 
-    
-3.  **Install Prerequisites**
-    
-    The python prerequisites are pretty simple:
-    ```bash
-    pip install openai flask
-    ```
-
-4.  **Clone Repository:**
+3.  **Clone Repository:**
 
     ```bash
     git clone https://github.com/joaopaulo7/pasquale.git
     cd pasquale
     ```
-
+    
+4.  **Install Prerequisites**
+    
+    The python prerequisites are pretty simple:
+    ```bash
+    pip install -r requirements.txt
+    ```
    
 &nbsp;
 
@@ -93,25 +91,21 @@ Pasquale is currently still in development, so the only way to run it is directl
    
    If you are using the recommended LLM server and model, you're mostly good to go; however. it still might be interesting to tweak some settings.
    
-   To do that, you can edit the `config.json` file directly, which should look something like this:
-   ```json
-   {
-       "creds": {
-           "base_url": "http://localhost:11434/v1/",
-           "api_key": "ollama" 
-       },
-       "config": {
-           "model": "gemma3:1b-it-qat",
-           "genres": "formal; academic",
-           "extra_prompt": "",
-           "thinking": false,
-           "temperature": 0.0,
-           "max_tokens": 8000
-      }
-   }
+   To do that, you can edit the `config.yaml` file directly, which should look something like this:
+   ```yaml
+   creds:
+        base_url: http://llamacpp:8082/v1
+        api_key: "llamacpp"
+   config:
+        model_family: base
+        model: NVIDIA-Nemotron-3-Nano-4B-GGUF
+        genres: formal; scientific.
+        thinking: false
+        temperature: 0.0
    ```
+
    Most of the options are self-explanatory, but here are their descriptions anyway:
-   - **base_url and api_key:** These are your credentials to access the LLM server. **Important: choose the server's openAI-compatible url; otherwise, it won't work.**
+   - **base_url and api_key:** These are your credentials to access the LLM server. **Important: choose the server's openAI-compatible url.**
      
    - **model:** The model you want to use. Make sure you have it set up in the server.
      
@@ -129,7 +123,7 @@ Pasquale is currently still in development, so the only way to run it is directl
 
 2.  **Run server script:**
 
-    Starting the server is pretty straightforward. Just run `server_simple.py`:
+    Starting the server is pretty straightforward. Just run `simple_server.py` or the docker file:
     ```bash
     python3 server_simple.py
     ```
