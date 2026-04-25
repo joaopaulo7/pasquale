@@ -8,7 +8,7 @@ from pprint import pprint
 
 class Pasquale:
     
-    prompt_types = ("system", "reason", "text")
+    prompt_subtypes = ("system", "reason", "text")
     
     def __init__(
             self,
@@ -16,54 +16,69 @@ class Pasquale:
             config_file: str = "config.yaml"
             ) -> None:
         with open(config_file) as in_file:
-            config_json = yaml.safe_load(in_file)
+            config_yaml = yaml.safe_load(in_file)
         
-        self.client = AsyncOpenAI(**config_json["creds"])
-        self.config = config_json["config"]        
-        self.model_families = set(next(os.walk(prompts_folder))[1])
+        self._set_config(
+            prompts_folder = prompts_folder,
+            config = config_yaml)
+        
+    
+    def _set_config(self,
+            config: dict,
+            prompts_folder: str = "prompts"
+            ) -> None:
+        self.creds = config["creds"]
+        self.config = config["config"]
+        self.prompt_types = set(next(os.walk(prompts_folder))[1])
+        
+        self.client = AsyncOpenAI(**self.creds)
         self.messages = []
 
         self.prompts = {}
-        for family in self.model_families:
-            self._setup_prompt_family(family, prompts_folder)
-    
-    
-    def _setup_prompt_family(self, family: str, prompts_folder: str) -> None:
-        if not os.path.exists(f"{prompts_folder}/{family}") and family == "base":
-            raise  FileNotFoundError(f"No prompts for base family found. Aborting...")
+        for prompt_type in self.prompt_types:
+            self._setup_prompt_type(prompt_type, prompts_folder)
+
+
+    def _setup_prompt_type(self, prompt_type: str, prompts_folder: str) -> None:
+        if (not os.path.exists(f"{prompts_folder}/{prompt_type}")
+            and prompt_type == "base"):
+            raise  FileNotFoundError(f"No prompts for base type found. Aborting...")
         
         prompt = {}
-        for language in os.listdir(prompts_folder + "/" + family):
-            prompt[language] = self._setup_prompt_language(family, prompts_folder, language)
-        self.prompts[family] = prompt
+        for language in os.listdir(prompts_folder + "/" + prompt_type):
+            prompt[language] = self._setup_prompt_language(prompt_type, prompts_folder, language)
+        self.prompts[prompt_type] = prompt
 
 
-    def _setup_prompt_language(self, family: str, prompts_folder: str, language: str) -> dict:
+    def _setup_prompt_language(self, prompt_type: str, prompts_folder: str, language: str) -> dict:
         language_prompt = {}
-        for p_type in self.prompt_types:
-            language_prompt[p_type] = self._setup_prompt_type(family, prompts_folder, language, p_type)
-        
+        for p_subtype in self.prompt_subtypes:
+            language_prompt[p_subtype] = self._setup_prompt_subtype(
+                                                                    prompt_type,
+                                                                    prompts_folder,
+                                                                    language,
+                                                                    p_subtype)
         return language_prompt
 
 
-    def _setup_prompt_type(
+    def _setup_prompt_subtype(
             self,
-            family: str,
+            prompt_type: str,
             prompts_folder: str,
             language: str,
-            p_type: str
+            p_subtype: str
             ) -> str:
-        file_name = f"{prompts_folder}/{family}/{language}/{p_type}.md"
+        file_name = f"{prompts_folder}/{prompt_type}/{language}/{p_subtype}.md"
         try:
             with open(file_name) as in_file:
                 return in_file.read()
         except FileNotFoundError as e:
-            if family == "base":
-                raise  FileNotFoundError(f"Base {p_type} prompt for language {language} missing. Aborting...") from e
+            if prompt_type == "base":
+                raise  FileNotFoundError(f"Base {p_subtype} prompt for language {language} missing. Aborting...") from e
             else:
-                warnings.warn(f"""No {p_type} prompt for family '{family}' found.
+                warnings.warn(f"""No {p_subtype} prompt for type '{prompt_type}' found.
                     Pasquale will use base prompts instead.""")
-                return self.prompts["base"][language][p_type]
+                return self.prompts["base"][language][p_subtype]
 
     
     @staticmethod
@@ -99,7 +114,7 @@ class Pasquale:
                 
             if result[i][0] == " " or i == len(result)-1:
                 if start_i != -1:
-                    added_str = " ".join(added_s)
+                    added_str = " ".join(added_s) if added_s else " "
                     removed_str = " ".join(removed_s)
 
                     aux_dic = {}
@@ -129,7 +144,7 @@ class Pasquale:
                     # if just removes, expand bar to include the neighboring spaces
                     if aux_dic["added"] == " ":
                         if text1_i != len(text1):
-                            aux_dic["len"] += 1
+                            aux_dic["len"] += 2
                         if text1_i != 0:
                             aux_dic["char_start"] -= 1
                         
@@ -145,15 +160,24 @@ class Pasquale:
                     text2_i += 1
             
         return corrections
-    
+
+
+    def set_config(self,
+            config: dict,
+            ) -> None:
+        self.creds = config["creds"]
+        self.config = config["config"]
         
-    
+        self.client = AsyncOpenAI(**self.creds)
+
+
+
     async def ask_llm_check(
             self,
             text: list[str],
             language: str, 
             model: str,
-            model_family: str,
+            prompt_type: str,
             genres: list[str] = [""], 
             extra_prompt: str = "", 
             temperature: float = 0.0, 
@@ -162,11 +186,11 @@ class Pasquale:
             persistent: bool = True
             ) -> str:
         
-        if model_family not in self.model_families:
-            warnings.warn(f"No prompts for family '{model_family}' found. Pasquale will use base prompts instead.")
-            model_family = "base"
+        if prompt_type not in self.prompt_types:
+            warnings.warn(f"No prompts for type '{prompt_type}' found. Pasquale will use base prompts instead.")
+            prompt_type = "base"
         
-        current_prompts = self.prompts[model_family][language]
+        current_prompts = self.prompts[prompt_type][language]
         
         if len(current_prompts["system"]) != 0:
             system_prompt = current_prompts["system"].format(
@@ -207,21 +231,27 @@ class Pasquale:
             correction: dict[str, str],
             language: str, 
             model: str,
-            model_family: str,
+            prompt_type: str,
             genres: list[str] = [""], 
             extra_prompt: str = "", 
             temperature: float = 0.0, 
             max_tokens:int = 8000, 
             thinking: bool = False, 
-            persistent: bool = True
+            persistent: bool = False
             ) -> str:
         
         
-        if model_family not in self.model_families:
-            warnings.warn(f"No prompts for family '{model_family}' found. Pasquale will use base prompts instead.")
-            model_family = "base"
+        if prompt_type not in self.prompt_types:
+            warnings.warn(f"No prompts for type '{prompt_type}' found. Pasquale will use base prompts instead.")
+            prompt_type = "base"
         
-        current_prompts = self.prompts[model_family][language]
+        if not self.messages and "system" in self.prompts[prompt_type][language]:
+            system_prompt = self.prompts[prompt_type][language]["system"].format(
+                genres=str(genres))
+            self.messages = [{"role": "system", "content": system_prompt}]
+            
+
+        current_prompts = self.prompts[prompt_type][language]
         text = current_prompts["reason"].format(
             removed  = correction["removed"],
             added    = correction["added"],
