@@ -103,7 +103,7 @@ https://github.com/user-attachments/assets/0dd077c0-dae1-434c-910e-a4f4b0e4490a
    Note: The server runs over HTTP (not HTTPS), which is fine for local use.
 
 
-2. **Configure credentials and inference**
+2. **Configure credentials and inference options**
 
    Access `http://127.0.0.1:5000/config` (or directly edit your `config.yaml` before running) to change the default options:
 
