@@ -50,9 +50,7 @@ https://github.com/user-attachments/assets/0dd077c0-dae1-434c-910e-a4f4b0e4490a
 
 ## 📝 Running Pasquale 📝
 
-Pasquale is still under development and currently runs directly from source.
-
-### 🛠️ Setup (Linux)
+### 🛠️ Setup (Linux command line)
 
 1. **Install an LLM inference server and model**
 
