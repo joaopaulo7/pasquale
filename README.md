@@ -110,8 +110,8 @@ https://github.com/user-attachments/assets/0dd077c0-dae1-434c-910e-a4f4b0e4490a
    * **Credentials:**
      * **base_url:** URL to an openAI-compatible endpoint
      * **api_key:** API key for your LLM server
-     * **model:** Model available on your server
    * **Inference options:**
+     * **model:** Model available on your server
      * **genres:** Writing style 
      * **extra_prompt:** Additional instructions for the model
      * **thinking:** enable or disable thining (disabled for faster results)
