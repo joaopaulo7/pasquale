@@ -284,6 +284,7 @@ class Pasquale:
         cor_text = await self.ask_llm_check(text, language, **self.config)
         corrections = Pasquale._get_corrections(text.split(" "), cor_text.split(" "))
         
+        # get reasons in parallel
         get_reasons = []
         for correction in corrections:
             get_reasons.append(self.ask_llm_reason(correction, language, **self.config))
