@@ -147,4 +147,4 @@ Planned improvements:
 
 ---
 
-Hopefully there aren’t any typos in this README.
+God, I hope there aren't any typos in this README.
