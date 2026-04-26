@@ -6,7 +6,7 @@ No need to send your text off into the cloud—keep everything private and on yo
 
 &nbsp;
 
-**Using Pasquale with TeXstudio:**
+**Using Pasquale with [TeXstudio](https://github.com/texstudio-org/texstudio):**
 
 https://github.com/user-attachments/assets/0dd077c0-dae1-434c-910e-a4f4b0e4490a
 

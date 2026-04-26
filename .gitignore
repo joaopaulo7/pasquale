@@ -179,4 +179,5 @@ grammar_venv/*
 
 # other
 start_server.sh
+config.yaml
 
