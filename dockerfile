@@ -13,8 +13,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the rest of the application code into the container
 COPY . .
 
-# Expose the port Flask runs on (default is 5000)
-EXPOSE 5000
+ENV PASQUALE_HOST="0.0.0.0"
 
 # Command to run the application
 CMD ["python", "src/simple_server.py"]

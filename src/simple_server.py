@@ -10,11 +10,16 @@ import page_builder as pb
 
 
 CONFIG_FILE = os.getenv("CONFIG_FILE")
+HOST = os.getenv("PASQUALE_HOST", "127.0.0.1")
+PORT = int(os.getenv("PASQUALE_PORT", 5000))
 
 app = Flask(__name__)
 cond = Condition()
 
-pasquale = pasq.Pasquale(config_file=CONFIG_FILE)
+if CONFIG_FILE:
+    pasquale = pasq.Pasquale(config_file=CONFIG_FILE)
+else:
+    pasquale = pasq.Pasquale()
 
 current_text = ""
 last_text = ""
@@ -94,7 +99,7 @@ def generate_matches(corrections):
 def main():
     return render_template("config.html",
                            page_name = "I'm workin' here!",
-                           form = "=)")
+                           form = "")
 
 
 @app.route("/config")
@@ -113,6 +118,7 @@ def try_convert_to_float(value: str | int):
         return float(value)
     except:
         return value
+
 
 @app.route("/config", methods=["POST"])
 def set_config():
@@ -182,4 +188,4 @@ async def check():
 
 
 if __name__ == "__main__":
-    app.run(threaded=True, host="0.0.0.0", port=5000)
+    app.run(threaded=True, host=HOST, port=PORT)
