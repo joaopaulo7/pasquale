@@ -171,9 +171,9 @@ async def check():
         current_text = text
         cond.notify()
     with cond:
-        notified = cond.wait(3.0)
+        notified = cond.wait(1.0)
 
-        # if current text mostly matches the last one in a 3s timespan,
+        # if current text mostly matches the last one in a 1s timespan,
         # don't update
         if (notified
             and text == current_text[:len(text)]

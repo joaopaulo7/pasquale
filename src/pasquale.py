@@ -1,6 +1,7 @@
 import yaml
 import os
 import warnings
+import asyncio
 
 from openai import AsyncOpenAI
 from difflib import Differ
@@ -283,9 +284,15 @@ class Pasquale:
         cor_text = await self.ask_llm_check(text, language, **self.config)
         corrections = Pasquale._get_corrections(text.split(" "), cor_text.split(" "))
         
+        get_reasons = []
         for correction in corrections:
-            correction["reason"] = await self.ask_llm_reason(correction, language, **self.config)
-        
+            get_reasons.append(self.ask_llm_reason(correction, language, **self.config))
+
+        reasons = await asyncio.gather(*get_reasons)
+
+        for correction, reason in zip(corrections, reasons):
+            correction["reason"] = reason
+
         return corrections
 
 
